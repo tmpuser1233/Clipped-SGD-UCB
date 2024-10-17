@@ -1,0 +1,9 @@
+test_ignore.ipynb
+*__pycache__*
+*dist
+experiments*
+mom
+mom*
+*.json
+*.txt
+figures*
