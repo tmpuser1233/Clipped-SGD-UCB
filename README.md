@@ -33,24 +33,25 @@ pip install -e . --force-reinstall
 
 ### project structure
 
-.
-└── sgdbandit
-    ├── __init__.py
-    ├── environments
-    │   ├── __init__.py
-    │   └── envs.py
-    ├── agents
-    │   ├── __init__.py
-    │   ├── abstract_agent.py
-    │   ├── agent_init_funcs.py
-    │   ├── arm_agent.py
-    │   └── ucb_agents.py
-    └── utils
+    .
+    └── sgdbandit
         ├── __init__.py
-        ├── algorithms.py
-        ├── arms.py
-        ├── function.py
-        └── mean_estimators.py
+        ├── environments
+        │   ├── __init__.py
+        │   └── envs.py
+        ├── agents
+        │   ├── __init__.py
+        │   ├── abstract_agent.py
+        │   ├── agent_init_funcs.py
+        │   ├── arm_agent.py
+        │   ├── ape.py
+        │   └── ucb_agents.py
+        └── utils
+            ├── __init__.py
+            ├── algorithms.py
+            ├── arms.py
+            ├── function.py
+            └── mean_estimators.py
 ### environments
 
 You can make your own environment according to abstract class structure ![environments](./sgdbandit/environments/envs.py)
@@ -118,7 +119,7 @@ class factuey function for proposed methods
 ```python
 def SGD_SMoM(n_actions, coeff, n=1, m=0, T: int = 10_000, R: float = 10.0, theta: float = 0.001, init_steps: int = 0):
     mean_estimator = mean_estimators.SMoM(n, m, theta=theta)
-    arm = arms.SGDArm(mean_estimator, K, R)
+    arm = arms.SGDArm(mean_estimator, T, R)
     agent = arm_agent.ArmAgent(n_actions=n_actions, coeff=coeff, arm=arm, init_steps=init_steps)
     agent.name = "SGD-UCB"
     return agent
