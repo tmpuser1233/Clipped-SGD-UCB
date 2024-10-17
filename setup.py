@@ -14,6 +14,7 @@ install_requires = [
     "seaborn>=0.13.2,<0.14.0",
     "tqdm>=4.66.1,<5.0.0",
     "scipy",    
+    "ipykernel"
 ]
 
 setup_kwargs = {

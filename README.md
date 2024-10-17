@@ -21,15 +21,9 @@ An example of usage can be found in ![test.ipynb](./test.ipynb)
 
 ## Installation
 
-Requiring python3.9
+Requiring python>=3.9
 
-to setup use poetry:
-
-```
-poetry build
-```
-
-or setup.py:
+to setup run:
 
 ```
 pip install -e . --force-reinstall
@@ -39,25 +33,24 @@ pip install -e . --force-reinstall
 
 ### project structure
 
-    .
-    └── sgdbandit
+.
+└── sgdbandit
+    ├── __init__.py
+    ├── environments
+    │   ├── __init__.py
+    │   └── envs.py
+    ├── agents
+    │   ├── __init__.py
+    │   ├── abstract_agent.py
+    │   ├── agent_init_funcs.py
+    │   ├── arm_agent.py
+    │   └── ucb_agents.py
+    └── utils
         ├── __init__.py
-        ├── environments
-        │   ├── __init__.py
-        │   └── envs.py
-        ├── agents
-        │   ├── __init__.py
-        │   ├── abstract_agent.py
-        │   ├── agent_init_funcs.py
-        │   ├── arm_agent.py
-        │   └── ucb_agents.py
-        └── utils
-            ├── __init__.py
-            ├── algorithms.py
-            ├── arms.py
-            ├── function.py
-            └── mean_estimators.py
-
+        ├── algorithms.py
+        ├── arms.py
+        ├── function.py
+        └── mean_estimators.py
 ### environments
 
 You can make your own environment according to abstract class structure ![environments](./sgdbandit/environments/envs.py)
@@ -87,7 +80,6 @@ You can make your own environment according to abstract class structure ![enviro
             """
             pass
 ```
-
 There realized set of environments with different types of distribution on arms:
 
 ```python
@@ -97,7 +89,6 @@ class CauchyDistributionEnv
     https://en.wikipedia.org/wiki/Cauchy_distribution
     """
 ```
-
 ```python
 class CauchyPlusExpDistributionEnv(RewardArrEnv):
     """
@@ -105,7 +96,6 @@ class CauchyPlusExpDistributionEnv(RewardArrEnv):
     f(x) = 0.7 * Cauchy(x) + 0.3 * Exp(x+1)
     """
 ```
-
 ```python
 class CauchyPlusParetoEnv(RewardArrEnv):
     """
@@ -115,14 +105,12 @@ class CauchyPlusParetoEnv(RewardArrEnv):
     the second term is the density of the Pareto distribution
     """
 ```
-
 ```python
 class FrechetDistribution(RewardArrEnv):
     """
     Environment with arms with noise distributed as Fréchet distribution
     https://en.wikipedia.org/wiki/Fréchet_distribution
 ```
-
 ### Agents
 
 class factuey function for proposed methods
@@ -135,7 +123,6 @@ def SGD_SMoM(n_actions, coeff, n=1, m=0, T: int = 10_000, R: float = 10.0, theta
     agent.name = "SGD-UCB"
     return agent
 ```
-
 * ```R``` - is upper bound for rewards absolute value.
 * ```init_steps``` - count of steps that algorithm pull arms to init optimizers. We recommend to use ```init_steps=1``` for light tail environments and ```init_steps=3``` for heavy tail distributions.
 * ```theta``` - is a noise parameter for smoothing.
@@ -146,14 +133,12 @@ def SGD_SMoM(n_actions, coeff, n=1, m=0, T: int = 10_000, R: float = 10.0, theta
 class ClassicUCB(AbstractAgent):
     def __init__(self, n_actions=5, R=0.99)
 ```
-
 * ```R``` --  in article referred as $c$, is a confidence bound scale parameter.
 
 ```python
 class RobustUCBMedian(AbstractAgent):
     def __init__(self, n_actions=5, eps=0.25, v=0.25)
 ```
-
 * ```eps``` - distributions have moments of order $1 + \text{eps}$, eps \in (0; 1].
 * ```v``` - variance factor for moment $1 + \text{eps}$
 
@@ -161,12 +146,11 @@ class RobustUCBMedian(AbstractAgent):
 
 ### different distributions and arms experiment
 
- to run experiments with rewards for different noise distributions and true rewards select the desired algorithms, arms and rewards in ![regret_experiment.py](./experiment_helpers/experiment_setups/regret_experiment.py) and run in termina:
+to run experiments with rewards for different noise distributions and true rewards select the desired algorithms, arms and rewards in ![regret_experiment.py](./experiment_helpers/experiment_setups/regret_experiment.py) and run in termina:
 
 ```[python]
 python ./experiment_helpers/experiment_setups/regret_experiment.py experiments_folder EXP_NAME
 ```
-
 this will create the necessary directories and save the experiments in `experiments_folder` folder. To draw them, use ![experiment_drawer.ipynb](./experiment_drawer.ipynb)
 
 ### runtime comparison experiment
@@ -176,7 +160,6 @@ This is an experiment for runtime comparison. To run it, select appropriate para
 ```[python]
 python ./experiment_helpers/experiment_setups/runtime_comparison.py runtime_comp.json
 ```
-
 this will save experiment in `runtime_comp.json` file. To make table of runtimes, use ![experiment_drawer.ipynb](./experiment_drawer.ipynb)
 
 ### Delta experiment
@@ -186,13 +169,11 @@ This is a code to run experiment with arms [0,0,0,0,$\Delta$] and thus show how 
 ```[python]
 python ./experiment_helpers/experiment_setups/delta_light_tail.py delta_light.json
 ```
-
 or
 
 ```[python]
 python ./experiment_helpers/experiment_setups/delta_heavy_tail.py delta_heavy.json
 ```
-
 this will save experiment in `delta_light.json`/`delta_heavy.json` file. To draw them use ![experiment_drawer.ipynb](./experiment_drawer.ipynb)
 
 To make experiments be easily tried to run, we have commented out fewer algorithms and made fewer steps in the presented code. To run all the algorithms for the required number of steps and attempts, simply set the desired budget `K` and `n_trials` in experiment running codes.
